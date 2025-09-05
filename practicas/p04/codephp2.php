@@ -27,7 +27,5 @@ echo "<h2> Buenos días de $variable1 </h2>";
 </p>
 <?= "<div><big> Buenos días de $variable2 </big></div>" ?> ← (8)
 </body>
-<<<<<<< HEAD
 
-=======
->>>>>>> 80a99cc7050760047ce05ae20dc4974699e6b2b3
+</html>
