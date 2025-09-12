@@ -125,5 +125,12 @@ echo "<p>e como texto: " . boolToText($e) . "</p>";
 unset($a, $b, $c, $d, $e, $f);
 
     ?>
+
+echo "<h2>Ejercicio 7</h2>";
+
+echo "<p>Versión de Apache/PHP: " . $_SERVER['SERVER_SOFTWARE'] . "</p>";
+echo "<p>Sistema operativo del servidor: " . PHP_OS . "</p>";
+echo "<p>Idioma del navegador: " . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . "</p>";
+
 </body>
 </html>
