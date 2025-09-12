@@ -51,6 +51,22 @@ echo "<p>Explicación: en el segundo bloque, tanto b como c referencian a a, por
 
 unset($a, $b, $c);
 
+echo "<h2>Ejercicio 3</h2>";
+
+$a = "PHP5";
+$z[] = &$a;
+$b = "5a version de PHP";
+$c = $b * 10; // dará 0 porque $b no es numérico
+$a .= $b;
+$b *= $c;     // sigue en 0
+$z[0] = "MySQL";
+
+echo "<p>a: "; var_dump($a); echo "</p>";
+echo "<p>b: "; var_dump($b); echo "</p>";
+echo "<p>c: "; var_dump($c); echo "</p>";
+echo "<p>z: "; print_r($z); echo "</p>";
+
+unset($a, $b, $c, $z);
 
     ?>
 </body>
