@@ -28,6 +28,30 @@
         echo '<li>$_element1 es válida porque inicia con guión bajo.</li>';
         echo '<li>$house*5 es inválida porque el símbolo * no está permitido.</li>';
         echo '</ul>';
+
+echo "<h2>Ejercicio 2</h2>";
+
+$a = "ManejadorSQL";
+$b = 'MySQL';
+$c = &$a;
+
+echo "<h3>Primer bloque</h3>";
+echo "a: $a <br>";
+echo "b: $b <br>";
+echo "c: $c <br>";
+
+$a = "PHP server";
+$b = &$a;
+
+echo "<h3>Segundo bloque</h3>";
+echo "a: $a <br>";
+echo "b: $b <br>";
+echo "c: $c <br>";
+echo "<p>Explicación: en el segundo bloque, tanto b como c referencian a a, por eso muestran el mismo valor.</p>";
+
+unset($a, $b, $c);
+
+
     ?>
 </body>
 </html>
