@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Práctica 3</title>
+    <title>Práctica 5</title>
 </head>
 <body>
     <h2>Ejercicio 1</h2>
@@ -67,6 +67,24 @@ echo "<p>c: "; var_dump($c); echo "</p>";
 echo "<p>z: "; print_r($z); echo "</p>";
 
 unset($a, $b, $c, $z);
+
+
+echo "<h2>Ejercicio 4</h2>";
+
+$GLOBALS['a'] = "PHP5";
+$GLOBALS['z'][] = &$GLOBALS['a'];
+$GLOBALS['b'] = "5a version de PHP";
+$GLOBALS['c'] = $GLOBALS['b'] * 10;
+$GLOBALS['a'] .= $GLOBALS['b'];
+$GLOBALS['b'] *= $GLOBALS['c'];
+$GLOBALS['z'][0] = "MySQL";
+
+echo "<p>a: "; var_dump($GLOBALS['a']); echo "</p>";
+echo "<p>b: "; var_dump($GLOBALS['b']); echo "</p>";
+echo "<p>c: "; var_dump($GLOBALS['c']); echo "</p>";
+echo "<p>z: "; print_r($GLOBALS['z']); echo "</p>";
+
+unset($GLOBALS['a'], $GLOBALS['b'], $GLOBALS['c'], $GLOBALS['z']);
 
     ?>
 </body>
