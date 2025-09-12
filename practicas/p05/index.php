@@ -86,6 +86,19 @@ echo "<p>z: "; print_r($GLOBALS['z']); echo "</p>";
 
 unset($GLOBALS['a'], $GLOBALS['b'], $GLOBALS['c'], $GLOBALS['z']);
 
+
+echo "<h2>Ejercicio 5</h2>";
+
+$a = "7 personas";
+$b = (integer) $a;  // toma solo el 7
+$a = "9E3";
+$c = (double) $a;   // notación científica = 9000
+
+echo "<p>a: $a</p>";
+echo "<p>b: $b</p>";
+echo "<p>c: $c</p>";
+
+
     ?>
 </body>
 </html>
