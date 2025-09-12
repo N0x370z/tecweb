@@ -98,6 +98,31 @@ echo "<p>a: $a</p>";
 echo "<p>b: $b</p>";
 echo "<p>c: $c</p>";
 
+echo "<h2>Ejercicio 6</h2>";
+
+$a = "0";
+$b = "TRUE";
+$c = FALSE;
+$d = ($a OR $b);
+$e = ($a AND $c);
+$f = ($a XOR $b);
+
+echo "<p>a: "; var_dump($a); echo "</p>";
+echo "<p>b: "; var_dump($b); echo "</p>";
+echo "<p>c: "; var_dump($c); echo "</p>";
+echo "<p>d: "; var_dump($d); echo "</p>";
+echo "<p>e: "; var_dump($e); echo "</p>";
+echo "<p>f: "; var_dump($f); echo "</p>";
+
+// Función para mostrar booleanos como texto
+function boolToText($value) {
+    return $value ? 'true' : 'false';
+}
+
+echo "<p>c como texto: " . boolToText($c) . "</p>";
+echo "<p>e como texto: " . boolToText($e) . "</p>";
+
+unset($a, $b, $c, $d, $e, $f);
 
     ?>
 </body>
