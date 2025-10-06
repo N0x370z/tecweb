@@ -1,0 +1,160 @@
+k<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript - Ejemplos</title>
+    <script src="./src/main.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .ejemplo { 
+            background: white;
+            margin: 15px 0; 
+            padding: 15px; 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button { 
+            background: #007bff;
+            color: white;
+            padding: 10px 20px; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover { background: #0056b3; }
+        .resultado { 
+            margin-top: 10px; 
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 3px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ejemplos de JavaScript - Práctica</h1>
+    
+    <!-- 
+    Ejemplo original comentado:
+    <h1>Hola Mundo de JavaScript</h1>
+    <div id="nombre"></div>
+    <div id="edad"></div>
+    <input id="clickMe" type="button" value="clickme" onclick="getDatos();" />
+    -->
+
+    <!-- JS01 - Introducción a JavaScript -->
+    <div class="ejemplo">
+        <h3>Ejemplo 1: Hola Mundo (JS01 - pág. 8)</h3>
+        <button onclick="ejemplo1()">Ejecutar</button>
+        <div id="resultado1" class="resultado"></div>
+    </div>
+
+    <!-- JS02 - Variables, Entradas y Operadores -->
+    <div class="ejemplo">
+        <h3>Ejemplo 2: Variables (JS02 - pág. 6)</h3>
+        <button onclick="ejemplo2()">Ejecutar</button>
+        <div id="resultado2" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 3: Entrada de datos por teclado (JS02 - pág. 12)</h3>
+        <button onclick="ejemplo3()">Ejecutar</button>
+        <div id="resultado3" class="resultado"></div>
+    </div>
+
+<!-- JS03 - Estructuras de Condición -->
+    <div class="ejemplo">
+        <h3>Ejemplo 4: Estructura Secuencial (JS03 - pág. 3)</h3>
+        <button onclick="ejemplo4()">Ejecutar</button>
+        <div id="resultado4" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 5: Sentencia if (JS03 - pág. 8)</h3>
+        <button onclick="ejemplo5()">Ejecutar</button>
+        <div id="resultado5" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 6: Sentencia if-else (JS03 - pág. 11)</h3>
+        <button onclick="ejemplo6()">Ejecutar</button>
+        <div id="resultado6" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 7: Sentencia if-else anidadas (JS03 - pág. 15-16)</h3>
+        <button onclick="ejemplo7()">Ejecutar</button>
+        <div id="resultado7" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 8: Sentencia switch (JS03 - pág. 18)</h3>
+        <button onclick="ejemplo8()">Ejecutar</button>
+        <div id="resultado8" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 9: Switch con colores (JS03 - pág. 21)</h3>
+        <button onclick="ejemplo9()">Ejecutar</button>
+        <div id="resultado9" class="resultado"></div>
+    </div>
+
+    <!-- JS04 - Estructuras de Repetición -->
+    <div class="ejemplo">
+        <h3>Ejemplo 10: Sentencia while (JS04 - pág. 5)</h3>
+        <button onclick="ejemplo10()">Ejecutar</button>
+        <div id="resultado10" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 11: Concepto de acumulador (JS04 - pág. 6)</h3>
+        <button onclick="ejemplo11()">Ejecutar</button>
+        <div id="resultado11" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 12: Sentencia do-while (JS04 - pág. 12)</h3>
+        <button onclick="ejemplo12()">Ejecutar</button>
+        <div id="resultado12" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 13: Sentencia for (JS04 - pág. 16)</h3>
+        <button onclick="ejemplo13()">Ejecutar</button>
+        <div id="resultado13" class="resultado"></div>
+    </div>
+
+<!-- JS05 - Funciones -->
+    <div class="ejemplo">
+        <h3>Ejemplo 14: Función simple (JS05 - pág. 6)</h3>
+        <button onclick="ejemplo14()">Ejecutar</button>
+        <div id="resultado14" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 15: Función con parámetros (JS05 - pág. 7)</h3>
+        <button onclick="ejemplo15()">Ejecutar</button>
+        <div id="resultado15" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 16: Función con datos de entrada (JS05 - pág. 10)</h3>
+        <button onclick="ejemplo16()">Ejecutar</button>
+        <div id="resultado16" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 17: Función con retorno (JS05 - pág. 13)</h3>
+        <button onclick="ejemplo17()">Ejecutar</button>
+        <div id="resultado17" class="resultado"></div>
+    </div>
+
+    <div class="ejemplo">
+        <h3>Ejemplo 18: Función con switch (JS05 - pág. 15)</h3>
+        <button onclick="ejemplo18()">Ejecutar</button>
+        <div id="resultado18" class="resultado"></div>
+    </div>
+
+</body>
+</html>
