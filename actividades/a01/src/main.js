@@ -219,3 +219,106 @@ function ejemplo13() {
     }
     document.getElementById('resultado13').innerHTML = resultado;
 }
+
+// ========== JS05 - Funciones ==========
+// Ejemplo pág. 6: Función simple
+function ejemplo14() {
+    console.log("Ejecutando ejemplo 14 - Función simple");
+    
+    function mostrarMensaje() {
+        return "Cuidado<br>Ingresa tu documento correctamente<br>";
+    }
+    
+    var resultado = '';
+    resultado += mostrarMensaje();
+    resultado += mostrarMensaje();
+    resultado += mostrarMensaje();
+    
+    document.getElementById('resultado14').innerHTML = resultado;
+}
+
+// Ejemplo pág. 7: Función con parámetros
+function ejemplo15() {
+    console.log("Ejecutando ejemplo 15 - Función con parámetros");
+    
+    function mostrarMensajeParam() {
+        var msg = "Cuidado<br>Ingresa tu documento correctamente<br>";
+        return msg;
+    }
+    
+    var resultado = mostrarMensajeParam() + mostrarMensajeParam() + mostrarMensajeParam();
+    document.getElementById('resultado15').innerHTML = resultado;
+}
+
+// Ejemplo pág. 10: Función con datos de entrada
+function ejemplo16() {
+    console.log("Ejecutando ejemplo 16 - Función con datos de entrada");
+    
+    function mostrarRango(x1, x2) {
+        var inicio;
+        var resultado = '';
+        for (inicio = x1; inicio <= x2; inicio++) {
+            resultado += inicio + ' ';
+        }
+        return resultado;
+    }
+    
+    var valor1, valor2;
+    valor1 = prompt('Ingresa el valor inferior:', '');
+    valor1 = parseInt(valor1);
+    valor2 = prompt('Ingresa el valor superior:', '');
+    valor2 = parseInt(valor2);
+    
+    var resultado = mostrarRango(valor1, valor2);
+    document.getElementById('resultado16').innerHTML = resultado;
+}
+
+// Ejemplo pág. 13: Función con retorno
+function ejemplo17() {
+    console.log("Ejecutando ejemplo 17 - Función con retorno");
+    
+    function convertirCastellano(x) {
+        if (x == 1)
+            return "uno";
+        else
+            if (x == 2)
+                return "dos";
+            else
+                if (x == 3)
+                    return "tres";
+                else
+                    if (x == 4)
+                        return "cuatro";
+                    else
+                        if (x == 5)
+                            return "cinco";
+                        else
+                            return "valor incorrecto";
+    }
+    
+    var valor = prompt("Ingresa un valor entre 1 y 5", "");
+    valor = parseInt(valor);
+    var r = convertirCastellano(valor);
+    document.getElementById('resultado17').innerHTML = r;
+}
+
+// Ejemplo pág. 15: Función con switch
+function ejemplo18() {
+    console.log("Ejecutando ejemplo 18 - Función con switch");
+    
+    function convertirCastellano(x) {
+        switch (x) {
+            case 1: return "uno";
+            case 2: return "dos";
+            case 3: return "tres";
+            case 4: return "cuatro";
+            case 5: return "cinco";
+            default: return "valor incorrecto";
+        }
+    }
+    
+    var valor = prompt("Ingresa un valor entre 1 y 5", "");
+    valor = parseInt(valor);
+    var r = convertirCastellano(valor);
+    document.getElementById('resultado18').innerHTML = r;
+}
