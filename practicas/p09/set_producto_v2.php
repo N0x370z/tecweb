@@ -98,58 +98,14 @@ $resultado = $conexion->query($query_validacion);
         a:hover {
             background-color: #45a049;
         }
-    </style>
-</head>
-<body>
-    <h1>Resultado del Registro de Producto</h1>
-    
-    <?php
-    if ($resultado->num_rows > 0) {
-        // El producto ya existe
-        echo '<div class="mensaje error">';
-        echo '<h2>❌ Error en el Registro</h2>';
-        echo '<p><strong>El producto ya existe en la base de datos.</strong></p>';
-        echo '<p>Ya existe un producto con las siguientes características:</p>';
-        echo '<ul>';
-        echo '<li><strong>Nombre:</strong> ' . htmlspecialchars($nombre) . '</li>';
-        echo '<li><strong>Marca:</strong> ' . htmlspecialchars($marca) . '</li>';
-        echo '<li><strong>Modelo:</strong> ' . htmlspecialchars($modelo) . '</li>';
-        echo '</ul>';
-        echo '<p>Por favor, verifica los datos e intenta nuevamente.</p>';
-        echo '</div>';
-    } else {
-        // El producto no existe, proceder con la inserción
-        $query_insercion = "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen) 
-                           VALUES ('$nombre', '$marca', '$modelo', $precio, '$detalles', $unidades, '$imagen')";
-        
-        if ($conexion->query($query_insercion) === TRUE) {
-            echo '<div class="mensaje exito">';
-            echo '<h2>✓ Producto Registrado Exitosamente</h2>';
-            echo '<p>El producto ha sido agregado correctamente a la base de datos.</p>';
-            echo '</div>';
-            
-            echo '<div class="resumen">';
-            echo '<h2>Resumen de Datos Insertados</h2>';
-            echo '<div class="dato"><strong>ID:</strong> ' . $conexion->insert_id . '</div>';
-            echo '<div class="dato"><strong>Nombre:</strong> ' . htmlspecialchars($nombre) . '</div>';
-            echo '<div class="dato"><strong>Marca:</strong> ' . htmlspecialchars($marca) . '</div>';
-            echo '<div class="dato"><strong>Modelo:</strong> ' . htmlspecialchars($modelo) . '</div>';
-            echo '<div class="dato"><strong>Precio:</strong> $' . number_format($precio, 2) . ' MXN</div>';
-            echo '<div class="dato"><strong>Detalles:</strong> ' . htmlspecialchars($detalles) . '</div>';
-            echo '<div class="dato"><strong>Unidades:</strong> ' . $unidades . '</div>';
-            echo '<div class="dato"><strong>Imagen:</strong> ' . htmlspecialchars($imagen) . '</div>';
-            echo '</div>';
-        } else {
-            echo '<div class="mensaje error">';
-            echo '<h2>❌ Error al Insertar en la Base de Datos</h2>';
-            echo '<p>Error: ' . $conexion->error . '</p>';
-            echo '</div>';
+        .info-query {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 0.9em;
         }
-    }
-    
-    $conexion->close();
-    ?>
-    
-    <a href="formulario_productos.html">← Registrar otro producto</a>
-</body>
-</html>
+    </style>
+</hea
