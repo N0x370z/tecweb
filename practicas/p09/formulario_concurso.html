@@ -7,21 +7,86 @@
         ol, ul {
             list-style-type: none;
         }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #555;
+        }
+        fieldset {
+            background-color: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        legend {
+            color: #4CAF50;
+            font-weight: bold;
+            padding: 5px 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"],
+        input[type="reset"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        input[type="submit"]:hover,
+        input[type="reset"]:hover {
+            background-color: #45a049;
+        }
+        input[type="reset"] {
+            background-color: #f44336;
+        }
+        input[type="reset"]:hover {
+            background-color: #da190b;
+        }
+        p {
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
     <h1>Registro al Concurso "Chidos mis Tenis"</h1>
     <p>¿Quieres cambiar tus viejos tenis por un par personalizado de Tenis Mike®?<br><br>Justifica el por qué tus tenis se <em>tienen que</em> ir y tú puedes ser uno de los diez afortunados ganadores.</p>
     
-    <form action="http://52.43.117.247/neo/classroom/tw/concurso.php" method="POST">
+    <!-- MODIFICADO: Ahora apunta a concurso.php local -->
+    <form action="concurso.php" method="POST">
         <fieldset>
             <legend>Información Personal</legend>
             <ul>
-                <li>Nombre: <input type="text" name="name"></li>
-                <li>Dirección de E-mail: <input type="email" name="email"></li>
-                <li>Número Telefónico: <input type="tel" name="phone"></li>
+                <li>Nombre: <input type="text" name="name" required></li>
+                <li>Dirección de E-mail: <input type="email" name="email" required></li>
+                <li>Número Telefónico: <input type="tel" name="phone" required></li>
                 <li>Mis tenis son tan feos porque...<br>
-                    <textarea name="story" rows="4" cols="60" maxlength="300" placeholder="No más de 300 caracteres de longitud"></textarea>
+                    <textarea name="story" rows="4" cols="60" maxlength="300" placeholder="No más de 300 caracteres de longitud" required></textarea>
                 </li>
             </ul>
         </fieldset>
@@ -54,7 +119,8 @@
             <fieldset>
                 <legend>Talla</legend>
                 <p>Las medidas reflejan el estándar masculino:</p>
-                <select name="size" size="1">
+                <select name="size" size="1" required>
+                    <option value="">Selecciona una talla</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
@@ -68,7 +134,7 @@
             </fieldset>
         </fieldset>
         
-        <p>
+        <p style="text-align: center;">
             <input type="submit" value="¡Chidos mis Tenis!">
             <input type="reset" value="Restablecer">
         </p>
