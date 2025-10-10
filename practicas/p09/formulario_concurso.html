@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Registro al Concurso</title>
+    <style type="text/css">
+        ol, ul {
+            list-style-type: none;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #555;
+        }
+        fieldset {
+            background-color: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        legend {
+            color: #4CAF50;
+            font-weight: bold;
+            padding: 5px 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"],
+        input[type="reset"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        input[type="submit"]:hover,
+        input[type="reset"]:hover {
+            background-color: #45a049;
+        }
+        input[type="reset"] {
+            background-color: #f44336;
+        }
+        input[type="reset"]:hover {
+            background-color: #da190b;
+        }
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro al Concurso "Chidos mis Tenis"</h1>
+    <p>¿Quieres cambiar tus viejos tenis por un par personalizado de Tenis Mike®?<br><br>Justifica el por qué tus tenis se <em>tienen que</em> ir y tú puedes ser uno de los diez afortunados ganadores.</p>
+    
+    <!-- MODIFICADO: Ahora apunta a concurso.php local -->
+    <form action="concurso.php" method="POST">
+        <fieldset>
+            <legend>Información Personal</legend>
+            <ul>
+                <li>Nombre: <input type="text" name="name" required></li>
+                <li>Dirección de E-mail: <input type="email" name="email" required></li>
+                <li>Número Telefónico: <input type="tel" name="phone" required></li>
+                <li>Mis tenis son tan feos porque...<br>
+                    <textarea name="story" rows="4" cols="60" maxlength="300" placeholder="No más de 300 caracteres de longitud" required></textarea>
+                </li>
+            </ul>
+        </fieldset>
+        
+        <h2>Diseña tus Mike personalizados:</h2>
+        
+        <fieldset>
+            <legend>Diseño personalizado del Tenis</legend>
+            
+            <fieldset>
+                <legend>Color (escoge uno):</legend>
+                <ul>
+                    <li><input type="radio" name="color" value="red">Rojo</li>
+                    <li><input type="radio" name="color" value="blue" checked>Azul</li>
+                    <li><input type="radio" name="color" value="black">Negro</li>
+                    <li><input type="radio" name="color" value="silver">Plateado</li>
+                </ul>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Características (escoge tantas como quieras):</legend>
+                <ul>
+                    <li><input type="checkbox" name="features[]" value="laces">Cordones brillantes</li>
+                    <li><input type="checkbox" name="features[]" value="logo" checked>Logo metálico</li>
+                    <li><input type="checkbox" name="features[]" value="sole">Suela luminosa</li>
+                    <li><input type="checkbox" name="features[]" value="wifi">WiFi integrado</li>
+                </ul>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Talla</legend>
+                <p>Las medidas reflejan el estándar masculino:</p>
+                <select name="size" size="1" required>
+                    <option value="">Selecciona una talla</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                </select>
+            </fieldset>
+        </fieldset>
+        
+        <p style="text-align: center;">
+            <input type="submit" value="¡Chidos mis Tenis!">
+            <input type="reset" value="Restablecer">
+        </p>
+    </form>
+</body>
+</html>
