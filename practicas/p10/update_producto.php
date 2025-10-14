@@ -29,16 +29,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Construir la consulta UPDATE
-    $sql = "UPDATE productos SET 
-            nombre='$nombre', 
-            marca='$marca', 
-            modelo='$modelo', 
-            precio=$precio, 
-            detalles='$detalles', 
-            unidades=$unidades, 
-            imagen='$imagen' 
-            WHERE id=$id";
-    
+   // Construir la consulta UPDATE
+$sql = "UPDATE productos SET 
+        nombre='$nombre', 
+        marca='$marca', 
+        modelo='$modelo', 
+        precio=$precio, 
+        detalles='$detalles', 
+        unidades=$unidades, 
+        imagen='$imagen' 
+        WHERE id=$id";
+
+// DEBUG: Mostrar la consulta
+echo "<pre>";
+echo "SQL: " . $sql . "\n\n";
+echo "ID recibido: " . $id . "\n";
+echo "Nombre: " . $nombre . "\n";
+echo "Precio: " . $precio . "\n";
+echo "</pre>";
+die(); // Detener aquí para ver los datos
     // Ejecutar la actualización del registro
     if(mysqli_query($link, $sql)){
         echo '<!DOCTYPE html>
