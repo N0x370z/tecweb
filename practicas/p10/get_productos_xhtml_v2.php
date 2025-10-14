@@ -41,7 +41,81 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
         .precio { color: #4CAF50; font-weight: bold; }
         .no-resultados { text-align: center; padding: 40px; color: #666; background-color: white;
                          border-radius: 8px; margin-top: 20px; }
+        .btn-editar { background-color: #2196F3; color: white; padding: 8px 15px; 
+                      text-decoration: none; border-radius: 4px; font-size: 12px;
+                      display: inline-block; transition: background-color 0.3s; }
+        .btn-editar:hover { background-color: #0b7dda; }
     </style>
+    <script type="text/javascript">
+        function editarProducto(id, nombre, marca, modelo, precio, detalles, unidades, imagen) {
+            // Crear formulario dinámico
+            var form = document.createElement("form");
+            
+            // Campo ID
+            var inputId = document.createElement("input");
+            inputId.type = 'hidden';
+            inputId.name = 'id';
+            inputId.value = id;
+            form.appendChild(inputId);
+            
+            // Campo Nombre
+            var inputNombre = document.createElement("input");
+            inputNombre.type = 'hidden';
+            inputNombre.name = 'nombre';
+            inputNombre.value = nombre;
+            form.appendChild(inputNombre);
+            
+            // Campo Marca
+            var inputMarca = document.createElement("input");
+            inputMarca.type = 'hidden';
+            inputMarca.name = 'marca';
+            inputMarca.value = marca;
+            form.appendChild(inputMarca);
+            
+            // Campo Modelo
+            var inputModelo = document.createElement("input");
+            inputModelo.type = 'hidden';
+            inputModelo.name = 'modelo';
+            inputModelo.value = modelo;
+            form.appendChild(inputModelo);
+            
+            // Campo Precio
+            var inputPrecio = document.createElement("input");
+            inputPrecio.type = 'hidden';
+            inputPrecio.name = 'precio';
+            inputPrecio.value = precio;
+            form.appendChild(inputPrecio);
+            
+            // Campo Detalles
+            var inputDetalles = document.createElement("input");
+            inputDetalles.type = 'hidden';
+            inputDetalles.name = 'detalles';
+            inputDetalles.value = detalles;
+            form.appendChild(inputDetalles);
+            
+            // Campo Unidades
+            var inputUnidades = document.createElement("input");
+            inputUnidades.type = 'hidden';
+            inputUnidades.name = 'unidades';
+            inputUnidades.value = unidades;
+            form.appendChild(inputUnidades);
+            
+            // Campo Imagen
+            var inputImagen = document.createElement("input");
+            inputImagen.type = 'hidden';
+            inputImagen.name = 'imagen';
+            inputImagen.value = imagen;
+            form.appendChild(inputImagen);
+            
+            // Configurar formulario
+            form.method = 'POST';
+            form.action = 'formulario_productos_v2.html';
+            
+            // Enviar formulario
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 </head>
 <body>
     <h1>Productos con <?php echo $tope; ?> o menos unidades</h1>
@@ -58,6 +132,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
         echo '<th>Unidades</th>';
         echo '<th>Detalles</th>';
         echo '<th>Imagen</th>';
+        echo '<th>Editar</th>';
         echo '</tr>';
         
         while ($row = mysqli_fetch_assoc($result)) {
@@ -70,6 +145,21 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
             echo '<td>' . htmlspecialchars($row['unidades']) . '</td>';
             echo '<td>' . htmlspecialchars($row['detalles']) . '</td>';
             echo '<td><img src="' . htmlspecialchars($row['imagen']) . '" alt="' . htmlspecialchars($row['nombre']) . '" /></td>';
+            
+            // Botón de editar con JavaScript
+            echo '<td>';
+            echo '<a href="#" class="btn-editar" onclick="editarProducto(';
+            echo '\'' . htmlspecialchars($row['id']) . '\', ';
+            echo '\'' . htmlspecialchars($row['nombre']) . '\', ';
+            echo '\'' . htmlspecialchars($row['marca']) . '\', ';
+            echo '\'' . htmlspecialchars($row['modelo']) . '\', ';
+            echo '\'' . htmlspecialchars($row['precio']) . '\', ';
+            echo '\'' . htmlspecialchars($row['detalles']) . '\', ';
+            echo '\'' . htmlspecialchars($row['unidades']) . '\', ';
+            echo '\'' . htmlspecialchars($row['imagen']) . '\'';
+            echo '); return false;">Editar</a>';
+            echo '</td>';
+            
             echo '</tr>';
         }
         
@@ -82,4 +172,3 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     ?>
 </body>
 </html>
-
