@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto - TechZone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitulo {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        input[type="submit"] {
+            background-color: #667eea;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #5568d3;
+        }
+        .campo-requerido {
+            color: red;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: -5px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .info-texto {
+            font-size: 12px;
+            color: #666;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+        .input-error {
+            border-color: red !important;
+        }
+    </style>
+</head>
+<body>
+    <form id="formularioProducto" action="update_producto.php" method="POST" onsubmit="return validarFormulario()">
+        <h1>🎮 Editar Producto TechZone</h1>
+        <p class="subtitulo">Tecnología, Videojuegos y Audio</p>
+        
+        <!-- Campo oculto para el ID -->
+        <input type="hidden" id="id" name="id" value="">
+        
+        <label for="nombre">Nombre del Producto: <span class="campo-requerido">*</span></label>
+        <input type="text" id="nombre" name="nombre" value="">
+        <div id="errorNombre" class="error">El nombre es requerido y debe tener 100 caracteres o menos.</div>
+        
+        <label for="marca">Marca: <span class="campo-requerido">*</span></label>
+        <select id="marca" name="marca">
+            <option value="">-- Selecciona una marca --</option>
+            <option value="Sony">Sony</option>
+            <option value="Microsoft">Microsoft</option>
+            <option value="Nintendo">Nintendo</option>
+            <option value="Samsung">Samsung</option>
+            <option value="LG">LG</option>
+            <option value="Bose">Bose</option>
+            <option value="JBL">JBL</option>
+            <option value="Logitech">Logitech</option>
+            <option value="Razer">Razer</option>
+            <option value="Corsair">Corsair</option>
+            <option value="HyperX">HyperX</option>
+            <option value="Asus">Asus</option>
+            <option value="Acer">Acer</option>
+            <option value="Dell">Dell</option>
+            <option value="HP">HP</option>
+            <option value="Apple">Apple</option>
+            <option value="Xiaomi">Xiaomi</option>
+            <option value="Huawei">Huawei</option>
+            <option value="Otra">Otra</option>
+        </select>
+        <div id="errorMarca" class="error">Debes seleccionar una marca.</div>
+        
+        <label for="modelo">Modelo: <span class="campo-requerido">*</span></label>
+        <input type="text" id="modelo" name="modelo" value="">
+        <div id="errorModelo" class="error">El modelo es requerido, debe ser alfanumérico y tener 25 caracteres o menos.</div>
+        
+        <label for="precio">Precio: <span class="campo-requerido">*</span></label>
+        <input type="number" id="precio" name="precio" step="0.01" value="">
+        <div id="errorPrecio" class="error">El precio es requerido y debe ser mayor a $99.99</div>
+        
+        <label for="detalles">Detalles:</label>
+        <textarea id="detalles" name="detalles" placeholder="Descripción del producto tecnológico (máximo 250 caracteres)"></textarea>
+        <div id="errorDetalles" class="error">Los detalles deben tener 250 caracteres o menos.</div>
+        <div class="info-texto">Caracteres restantes: <span id="contadorDetalles">250</span></div>
+        
+        <label for="unidades">Unidades Disponibles: <span class="campo-requerido">*</span></label>
+        <input type="number" id="unidades" name="unidades" value="">
+        <div id="errorUnidades" class="error">Las unidades son requeridas y deben ser mayor o igual a 0.</div>
+        
+        <label for="imagen">URL de Imagen:</label>
+        <input type="text" id="imagen" name="imagen" value="" placeholder="https://ejemplo.com/imagen.jpg">
+        <div class="info-texto">Si no se proporciona, se usará una imagen por defecto.</div>
+        
+        <input type="submit" value="💾 Actualizar Producto">
+    </form>
+
+    <script>
+        // Cargar datos desde URL (GET) o desde formulario POST
+        window.addEventListener('load', function() {
+            // Función para obtener parámetros de la URL
+            function getParameterByName(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name) || '';
+            }
+            
+            // Cargar valores si vienen por GET
+            const id = getParameterByName('id');
+            const nombre = getParameterByName('nombre');
+            const marca = getParameterByName('marca');
+            const modelo = getParameterByName('modelo');
+            const precio = getParameterByName('precio');
+            const detalles = getParameterByName('detalles');
+            const unidades = getParameterByName('unidades');
+            const imagen = getParameterByName('imagen');
+            
+            if (id) document.getElementById('id').value = id;
+            if (nombre) document.getElementById('nombre').value = nombre;
+            if (marca) document.getElementById('marca').value = marca;
+            if (modelo) document.getElementById('modelo').value = modelo;
+            if (precio) document.getElementById('precio').value = precio;
+            if (detalles) document.getElementById('detalles').value = detalles;
+            if (unidades) document.getElementById('unidades').value = unidades;
+            if (imagen) document.getElementById('imagen').value = imagen;
+            
+            // Actualizar contador de detalles al cargar
+            const detallesActual = document.getElementById('detalles').value.length;
+            document.getElementById('contadorDetalles').textContent = 250 - detallesActual;
+        });
+
+        // Contador de caracteres para detalles
+        const detallesTextarea = document.getElementById('detalles');
+        const contadorDetalles = document.getElementById('contadorDetalles');
+        
+        detallesTextarea.addEventListener('input', function() {
+            const restantes = 250 - this.value.length;
+            contadorDetalles.textContent = restantes;
+            if (restantes < 0) {
+                contadorDetalles.style.color = 'red';
+            } else {
+                contadorDetalles.style.color = '#666';
+            }
+        });
+
+        // Función para validar el formulario
+        function validarFormulario() {
+            let esValido = true;
+            
+            // Limpiar errores previos
+            document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+            document.querySelectorAll('input, textarea, select').forEach(input => input.classList.remove('input-error'));
+            
+            // Validar nombre
+            const nombre = document.getElementById('nombre').value.trim();
+            if (nombre === '' || nombre.length > 100) {
+                mostrarError('nombre', 'errorNombre');
+                esValido = false;
+            }
+            
+            // Validar marca
+            const marca = document.getElementById('marca').value;
+            if (marca === '') {
+                mostrarError('marca', 'errorMarca');
+                esValido = false;
+            }
+            
+            // Validar modelo (alfanumérico y 25 caracteres o menos)
+            const modelo = document.getElementById('modelo').value.trim();
+            const regexAlfanumerico = /^[a-zA-Z0-9\s\-]+$/;
+            if (modelo === '' || modelo.length > 25 || !regexAlfanumerico.test(modelo)) {
+                mostrarError('modelo', 'errorModelo');
+                esValido = false;
+            }
+            
+            // Validar precio
+            const precio = parseFloat(document.getElementById('precio').value);
+            if (isNaN(precio) || precio <= 99.99) {
+                mostrarError('precio', 'errorPrecio');
+                esValido = false;
+            }
+            
+            // Validar detalles (opcional, pero si existe, máximo 250 caracteres)
+            const detalles = document.getElementById('detalles').value;
+            if (detalles.length > 250) {
+                mostrarError('detalles', 'errorDetalles');
+                esValido = false;
+            }
+            
+            // Validar unidades
+            const unidades = parseInt(document.getElementById('unidades').value);
+            if (isNaN(unidades) || unidades < 0) {
+                mostrarError('unidades', 'errorUnidades');
+                esValido = false;
+            }
+            
+            // Si imagen está vacía, asignar imagen por defecto
+            const imagen = document.getElementById('imagen').value.trim();
+            if (imagen === '') {
+                document.getElementById('imagen').value = 'img/default.png';
+            }
+            
+            if (!esValido) {
+                alert('Por favor, corrige los errores en el formulario antes de continuar.');
+            }
+            
+            return esValido;
+        }
+        
+        function mostrarError(campoId, errorId) {
+            document.getElementById(campoId).classList.add('input-error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
