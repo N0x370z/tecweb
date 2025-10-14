@@ -44,7 +44,81 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
         .total { background-color: white; padding: 15px; margin-top: 20px; border-radius: 4px;
                  font-weight: bold; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .eliminado-no { color: #28a745; font-weight: bold; text-align: center; }
+        .btn-editar { background-color: #2196F3; color: white; padding: 8px 15px; 
+                      text-decoration: none; border-radius: 4px; font-size: 12px;
+                      display: inline-block; transition: background-color 0.3s; }
+        .btn-editar:hover { background-color: #0b7dda; }
     </style>
+    <script type="text/javascript">
+        function editarProducto(id, nombre, marca, modelo, precio, detalles, unidades, imagen) {
+            // Crear formulario dinámico
+            var form = document.createElement("form");
+            
+            // Campo ID
+            var inputId = document.createElement("input");
+            inputId.type = 'hidden';
+            inputId.name = 'id';
+            inputId.value = id;
+            form.appendChild(inputId);
+            
+            // Campo Nombre
+            var inputNombre = document.createElement("input");
+            inputNombre.type = 'hidden';
+            inputNombre.name = 'nombre';
+            inputNombre.value = nombre;
+            form.appendChild(inputNombre);
+            
+            // Campo Marca
+            var inputMarca = document.createElement("input");
+            inputMarca.type = 'hidden';
+            inputMarca.name = 'marca';
+            inputMarca.value = marca;
+            form.appendChild(inputMarca);
+            
+            // Campo Modelo
+            var inputModelo = document.createElement("input");
+            inputModelo.type = 'hidden';
+            inputModelo.name = 'modelo';
+            inputModelo.value = modelo;
+            form.appendChild(inputModelo);
+            
+            // Campo Precio
+            var inputPrecio = document.createElement("input");
+            inputPrecio.type = 'hidden';
+            inputPrecio.name = 'precio';
+            inputPrecio.value = precio;
+            form.appendChild(inputPrecio);
+            
+            // Campo Detalles
+            var inputDetalles = document.createElement("input");
+            inputDetalles.type = 'hidden';
+            inputDetalles.name = 'detalles';
+            inputDetalles.value = detalles;
+            form.appendChild(inputDetalles);
+            
+            // Campo Unidades
+            var inputUnidades = document.createElement("input");
+            inputUnidades.type = 'hidden';
+            inputUnidades.name = 'unidades';
+            inputUnidades.value = unidades;
+            form.appendChild(inputUnidades);
+            
+            // Campo Imagen
+            var inputImagen = document.createElement("input");
+            inputImagen.type = 'hidden';
+            inputImagen.name = 'imagen';
+            inputImagen.value = imagen;
+            form.appendChild(inputImagen);
+            
+            // Configurar formulario
+            form.method = 'POST';
+            form.action = 'formulario_productos_v2.html';
+            
+            // Enviar formulario
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 </head>
 <body>
     <h1>Productos Vigentes (No Eliminados)</h1>
@@ -66,6 +140,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
         echo '<th>Detalles</th>';
         echo '<th>Imagen</th>';
         echo '<th>Eliminado</th>';
+        echo '<th>Editar</th>';
         echo '</tr>';
         
         while ($row = mysqli_fetch_assoc($result)) {
@@ -82,17 +157,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
             echo '<td>';
             $imagen = htmlspecialchars($row['imagen']);
             if (!empty($imagen)) {
-                // Si la imagen comienza con http:// o https://, usarla tal cual
                 if (strpos($imagen, 'http://') === 0 || strpos($imagen, 'https://') === 0) {
                     echo '<img src="' . $imagen . '" alt="' . htmlspecialchars($row['nombre']) . '" />';
-                } 
-                // Si comienza con img/, agregar la ruta relativa correcta
-                else if (strpos($imagen, 'img/') === 0) {
-                    // Ajusta esta ruta según tu estructura de carpetas
+                } else if (strpos($imagen, 'img/') === 0) {
                     echo '<img src="' . $imagen . '" alt="' . htmlspecialchars($row['nombre']) . '" />';
-                }
-                // Para cualquier otra ruta
-                else {
+                } else {
                     echo '<img src="' . $imagen . '" alt="' . htmlspecialchars($row['nombre']) . '" />';
                 }
             } else {
@@ -101,6 +170,21 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
             echo '</td>';
             
             echo '<td class="eliminado-no">' . htmlspecialchars($row['eliminado']) . '</td>';
+            
+            // Botón de editar con JavaScript
+            echo '<td>';
+            echo '<a href="#" class="btn-editar" onclick="editarProducto(';
+            echo '\'' . htmlspecialchars($row['id']) . '\', ';
+            echo '\'' . htmlspecialchars($row['nombre']) . '\', ';
+            echo '\'' . htmlspecialchars($row['marca']) . '\', ';
+            echo '\'' . htmlspecialchars($row['modelo']) . '\', ';
+            echo '\'' . htmlspecialchars($row['precio']) . '\', ';
+            echo '\'' . htmlspecialchars($row['detalles']) . '\', ';
+            echo '\'' . htmlspecialchars($row['unidades']) . '\', ';
+            echo '\'' . htmlspecialchars($row['imagen']) . '\'';
+            echo '); return false;">Editar</a>';
+            echo '</td>';
+            
             echo '</tr>';
         }
         
