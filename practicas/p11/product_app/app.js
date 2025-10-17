@@ -109,47 +109,92 @@ function agregarProducto(e) {
 
     // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
     var productoJsonString = document.getElementById('description').value;
+    
     // SE CONVIERTE EL JSON DE STRING A OBJETO
     let finalJSON;
     try {
         finalJSON = JSON.parse(productoJsonString);
     } catch (err) {
-        window.alert('JSON inválido. Verifica el formato.');
+        window.alert('ERROR: JSON inválido. Verifica el formato.');
         return;
     }
+    
     // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
     finalJSON['nombre'] = document.getElementById('name').value;
-    // VALIDACIONES BÁSICAS
+    
+    // ==================== VALIDACIONES SEGÚN LA PRÁCTICA ====================
+    
+    // 1. Validar NOMBRE (obligatorio, máximo 100 caracteres)
     if(!finalJSON.nombre || typeof finalJSON.nombre !== 'string' || finalJSON.nombre.trim() === '') {
-        window.alert('El nombre es obligatorio.');
+        window.alert('ERROR: El nombre es obligatorio.');
         return;
     }
-    if(finalJSON.precio === undefined || isNaN(Number(finalJSON.precio)) || Number(finalJSON.precio) < 0) {
-        window.alert('El precio debe ser un número válido y no negativo.');
+    if(finalJSON.nombre.trim().length > 100) {
+        window.alert('ERROR: El nombre debe tener máximo 100 caracteres.');
         return;
     }
-    if(finalJSON.unidades === undefined || isNaN(Number(finalJSON.unidades)) || Number(finalJSON.unidades) < 0) {
-        window.alert('Las unidades deben ser un número válido y no negativo.');
+    
+    // 2. Validar MARCA (obligatorio, máximo 25 caracteres)
+    if(!finalJSON.marca || typeof finalJSON.marca !== 'string' || finalJSON.marca.trim() === '' || finalJSON.marca.trim() === 'NA') {
+        window.alert('ERROR: La marca es obligatoria.');
         return;
     }
-    if(!finalJSON.modelo || typeof finalJSON.modelo !== 'string' || finalJSON.modelo.trim() === '') {
-        window.alert('El modelo es obligatorio.');
+    if(finalJSON.marca.trim().length > 25) {
+        window.alert('ERROR: La marca debe tener máximo 25 caracteres.');
         return;
     }
-    if(!finalJSON.marca || typeof finalJSON.marca !== 'string' || finalJSON.marca.trim() === '') {
-        window.alert('La marca es obligatoria.');
+    
+    // 3. Validar MODELO (obligatorio, máximo 25 caracteres)
+    if(!finalJSON.modelo || typeof finalJSON.modelo !== 'string' || finalJSON.modelo.trim() === '' || finalJSON.modelo.trim() === 'XX-000') {
+        window.alert('ERROR: El modelo es obligatorio.');
         return;
     }
-    if(!finalJSON.detalles || typeof finalJSON.detalles !== 'string' || finalJSON.detalles.trim() === '') {
-        window.alert('Los detalles son obligatorios.');
+    if(finalJSON.modelo.trim().length > 25) {
+        window.alert('ERROR: El modelo debe tener máximo 25 caracteres.');
         return;
     }
+    
+    // 4. Validar PRECIO (obligatorio, debe ser mayor a 99.99)
+    if(finalJSON.precio === undefined || isNaN(Number(finalJSON.precio))) {
+        window.alert('ERROR: El precio debe ser un número válido.');
+        return;
+    }
+    let precio = Number(finalJSON.precio);
+    if(precio <= 99.99) {
+        window.alert('ERROR: El precio debe ser mayor a 99.99');
+        return;
+    }
+    
+    // 5. Validar DETALLES (obligatorio, máximo 250 caracteres)
+    if(!finalJSON.detalles || typeof finalJSON.detalles !== 'string' || finalJSON.detalles.trim() === '' || finalJSON.detalles.trim() === 'NA') {
+        window.alert('ERROR: Los detalles son obligatorios.');
+        return;
+    }
+    if(finalJSON.detalles.trim().length > 250) {
+        window.alert('ERROR: Los detalles deben tener máximo 250 caracteres.');
+        return;
+    }
+    
+    // 6. Validar UNIDADES (obligatorio, debe ser entero >= 0)
+    if(finalJSON.unidades === undefined || isNaN(Number(finalJSON.unidades))) {
+        window.alert('ERROR: Las unidades deben ser un número válido.');
+        return;
+    }
+    let unidades = Number(finalJSON.unidades);
+    if(unidades < 0 || !Number.isInteger(unidades)) {
+        window.alert('ERROR: Las unidades deben ser un número entero mayor o igual a 0.');
+        return;
+    }
+    
+    // 7. Validar IMAGEN (opcional, establecer default si no existe)
     if(!finalJSON.imagen || typeof finalJSON.imagen !== 'string' || finalJSON.imagen.trim() === '') {
-        window.alert('La imagen es obligatoria.');
-        return;
+        finalJSON.imagen = 'img/default.png';
     }
+    
+    // ==================== FIN DE VALIDACIONES ====================
+    
     // SE OBTIENE EL STRING DEL JSON FINAL
-    productoJsonString = JSON.stringify(finalJSON,null,2);
+    productoJsonString = JSON.stringify(finalJSON, null, 2);
 
     // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
     var client = getXMLHttpRequest();
@@ -163,10 +208,15 @@ function agregarProducto(e) {
                 const resp = JSON.parse(client.responseText);
                 if (resp && resp.message) {
                     window.alert(resp.message);
+                    // Si fue exitoso (ok === true), limpiar el formulario
+                    if(resp.ok === true) {
+                        document.getElementById('name').value = '';
+                        document.getElementById('description').value = JSON.stringify(baseJSON, null, 2);
+                    }
                 } else {
                     window.alert('Operación completada.');
                 }
-            } catch (_) {
+            } catch (err) {
                 window.alert(client.responseText);
             }
         }
