@@ -112,13 +112,74 @@ $('.form-inline').submit(function(e) {
     e.preventDefault();
 });
 
-// Agregar o Editar producto
+// Agregar o Editar producto CON VALIDACIONES
 $('#product-form').submit(function(e) {
     e.preventDefault();
     
+    // Obtener el nombre del producto
+    let nombre = $('#name').val().trim();
+    
+    // VALIDACIÓN 1: Nombre vacío
+    if(nombre === '') {
+        let template_bar = `
+            <li style="list-style: none; color: #dc3545;">status: error</li>
+            <li style="list-style: none; color: #dc3545;">message: El nombre del producto es obligatorio</li>
+        `;
+        $('#product-result').removeClass('d-none');
+        $('#container').html(template_bar);
+        return;
+    }
+    
     let productoJsonString = $('#description').val();
-    let finalJSON = JSON.parse(productoJsonString);
-    finalJSON['nombre'] = $('#name').val();
+    let finalJSON;
+    
+    // VALIDACIÓN 2: JSON válido
+    try {
+        finalJSON = JSON.parse(productoJsonString);
+    } catch(error) {
+        let template_bar = `
+            <li style="list-style: none; color: #dc3545;">status: error</li>
+            <li style="list-style: none; color: #dc3545;">message: El formato JSON es inválido</li>
+        `;
+        $('#product-result').removeClass('d-none');
+        $('#container').html(template_bar);
+        return;
+    }
+    
+    // VALIDACIÓN 3: Campos requeridos en JSON
+    if(!finalJSON.precio || !finalJSON.marca || !finalJSON.modelo || !finalJSON.unidades) {
+        let template_bar = `
+            <li style="list-style: none; color: #dc3545;">status: error</li>
+            <li style="list-style: none; color: #dc3545;">message: Faltan campos obligatorios en el JSON (precio, marca, modelo, unidades)</li>
+        `;
+        $('#product-result').removeClass('d-none');
+        $('#container').html(template_bar);
+        return;
+    }
+    
+    // VALIDACIÓN 4: Valores numéricos válidos
+    if(isNaN(finalJSON.precio) || parseFloat(finalJSON.precio) <= 0) {
+        let template_bar = `
+            <li style="list-style: none; color: #dc3545;">status: error</li>
+            <li style="list-style: none; color: #dc3545;">message: El precio debe ser un número mayor a 0</li>
+        `;
+        $('#product-result').removeClass('d-none');
+        $('#container').html(template_bar);
+        return;
+    }
+    
+    if(isNaN(finalJSON.unidades) || parseInt(finalJSON.unidades) <= 0) {
+        let template_bar = `
+            <li style="list-style: none; color: #dc3545;">status: error</li>
+            <li style="list-style: none; color: #dc3545;">message: Las unidades deben ser un número mayor a 0</li>
+        `;
+        $('#product-result').removeClass('d-none');
+        $('#container').html(template_bar);
+        return;
+    }
+    
+    // Si todas las validaciones pasan, proceder con el envío
+    finalJSON['nombre'] = nombre;
     
     let productId = $('#productId').val();
     let url = './backend/product-add.php';
@@ -138,19 +199,40 @@ $('#product-form').submit(function(e) {
         data: productoJsonString,
         success: function(response) {
             let respuesta = JSON.parse(response);
-            let template_bar = `
-                <li style="list-style: none;">status: ${respuesta.status}</li>
-                <li style="list-style: none;">message: ${respuesta.message}</li>
-            `;
+            let template_bar = '';
+            
+            // Mostrar mensaje con color según el status
+            if(respuesta.status === 'success') {
+                template_bar = `
+                    <li style="list-style: none; color: #28a745;">status: ${respuesta.status}</li>
+                    <li style="list-style: none; color: #28a745;">message: ${respuesta.message}</li>
+                `;
+            } else {
+                template_bar = `
+                    <li style="list-style: none; color: #dc3545;">status: ${respuesta.status}</li>
+                    <li style="list-style: none; color: #dc3545;">message: ${respuesta.message}</li>
+                `;
+            }
             
             $('#product-result').removeClass('d-none');
             $('#container').html(template_bar);
             
-            listarProductos();
-            $('#product-form').trigger('reset');
-            $('#description').val(JSON.stringify(baseJSON, null, 2));
-            $('#productId').val('');
-            $('#product-form button[type="submit"]').text('Agregar Producto');
+            // Solo limpiar formulario si fue exitoso
+            if(respuesta.status === 'success') {
+                listarProductos();
+                $('#product-form').trigger('reset');
+                $('#description').val(JSON.stringify(baseJSON, null, 2));
+                $('#productId').val('');
+                $('#product-form button[type="submit"]').text('Agregar Producto');
+            }
+        },
+        error: function(xhr, status, error) {
+            let template_bar = `
+                <li style="list-style: none; color: #dc3545;">status: error</li>
+                <li style="list-style: none; color: #dc3545;">message: Error de conexión con el servidor</li>
+            `;
+            $('#product-result').removeClass('d-none');
+            $('#container').html(template_bar);
         }
     });
 });
@@ -167,10 +249,19 @@ $(document).on('click', '.product-delete', function() {
             data: { id: id },
             success: function(response) {
                 let respuesta = JSON.parse(response);
-                let template_bar = `
-                    <li style="list-style: none;">status: ${respuesta.status}</li>
-                    <li style="list-style: none;">message: ${respuesta.message}</li>
-                `;
+                let template_bar = '';
+                
+                if(respuesta.status === 'success') {
+                    template_bar = `
+                        <li style="list-style: none; color: #28a745;">status: ${respuesta.status}</li>
+                        <li style="list-style: none; color: #28a745;">message: ${respuesta.message}</li>
+                    `;
+                } else {
+                    template_bar = `
+                        <li style="list-style: none; color: #dc3545;">status: ${respuesta.status}</li>
+                        <li style="list-style: none; color: #dc3545;">message: ${respuesta.message}</li>
+                    `;
+                }
                 
                 $('#product-result').removeClass('d-none');
                 $('#container').html(template_bar);
