@@ -1,14 +1,7 @@
 <?php
-use TECWEB\MYAPI\Products;
-require_once __DIR__ . '/myapi/Products.php';
+    require_once __DIR__.'/../vendor/autoload.php';
+    use TECWEB\MYAPI\Create\Create;
 
-$productos = new Products('marketzone');
-$producto = file_get_contents('php://input');
-
-if (!empty($producto)) {
-    $jsonOBJ = json_decode($producto);
-    $productos->add($jsonOBJ);
-}
-
-echo $productos->getData();
+    $producto = new Create('marketzone');
+    echo $producto->add( json_decode( json_encode($_POST) ) );
 ?>
