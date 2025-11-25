@@ -6,8 +6,8 @@ let validationState = {
     modelo: false,
     precio: false,
     unidades: false,
-    detalles: true, // opcional
-    imagen: true    // opcional
+    detalles: true,
+    imagen: true
 };
 
 // FUNCIÓN DE INICIALIZACIÓN
@@ -16,9 +16,52 @@ $(document).ready(function() {
     setupValidations();
 });
 
+// ========================================
+// SISTEMA DE NOTIFICACIONES CON RECUADRO GRANDE
+// ========================================
+function showNotification(message, detail, type = 'success', duration = 5000) {
+    const notificationBox = $('#notification-box');
+    const notificationIcon = $('#notification-icon');
+    const notificationMessage = $('#notification-message');
+    const notificationDetail = $('#notification-detail');
+    
+    // Iconos según el tipo
+    const icons = {
+        success: '<i class="fas fa-check-circle"></i>',
+        error: '<i class="fas fa-times-circle"></i>',
+        info: '<i class="fas fa-info-circle"></i>',
+        warning: '<i class="fas fa-exclamation-triangle"></i>'
+    };
+    
+    // Limpiar clases anteriores
+    notificationBox.removeClass('notification-success notification-error notification-info notification-warning');
+    
+    // Agregar la clase correspondiente
+    notificationBox.addClass(`notification-${type}`);
+    
+    // Establecer contenido
+    notificationIcon.html(icons[type]);
+    notificationMessage.html(message);
+    notificationDetail.html(detail);
+    
+    // Mostrar notificación
+    notificationBox.addClass('show');
+    
+    // Ocultar después del tiempo especificado
+    setTimeout(() => {
+        notificationBox.removeClass('show');
+    }, duration);
+    
+    // Scroll suave hacia la notificación
+    $('html, body').animate({
+        scrollTop: notificationBox.offset().top - 150
+    }, 500);
+}
+
+// ========================================
 // CONFIGURAR VALIDACIONES EN TIEMPO REAL
+// ========================================
 function setupValidations() {
-    // VALIDACIÓN NOMBRE - Con verificación en BD
     $('#nombre').on('blur', function() {
         validateNombre(true);
     });
@@ -29,32 +72,26 @@ function setupValidations() {
         }
     });
 
-    // VALIDACIÓN MARCA
     $('#marca').on('blur', function() {
         validateMarca();
     });
 
-    // VALIDACIÓN MODELO
     $('#modelo').on('blur', function() {
         validateModelo();
     });
 
-    // VALIDACIÓN PRECIO
     $('#precio').on('blur', function() {
         validatePrecio();
     });
 
-    // VALIDACIÓN UNIDADES
     $('#unidades').on('blur', function() {
         validateUnidades();
     });
 
-    // VALIDACIÓN DETALLES
     $('#detalles').on('blur', function() {
         validateDetalles();
     });
 
-    // VALIDACIÓN IMAGEN
     $('#imagen').on('blur', function() {
         validateImagen();
     });
@@ -66,11 +103,9 @@ function validateNombre(checkDB = true) {
     const statusDiv = $('#status-nombre');
     const input = $('#nombre');
     
-    // Limpiar estado previo
     statusDiv.removeClass('success error warning').html('');
     input.removeClass('is-valid is-invalid');
     
-    // Validar campo vacío
     if (nombre === '') {
         statusDiv.addClass('error').html('⚠️ El nombre es obligatorio');
         input.addClass('is-invalid');
@@ -78,7 +113,6 @@ function validateNombre(checkDB = true) {
         return false;
     }
     
-    // Validar longitud (mínimo 3 caracteres)
     if (nombre.length < 3) {
         statusDiv.addClass('error').html('⚠️ El nombre debe tener al menos 3 caracteres');
         input.addClass('is-invalid');
@@ -86,7 +120,6 @@ function validateNombre(checkDB = true) {
         return false;
     }
     
-    // Validar longitud máxima (100 caracteres)
     if (nombre.length > 100) {
         statusDiv.addClass('error').html('⚠️ El nombre no debe exceder 100 caracteres');
         input.addClass('is-invalid');
@@ -94,7 +127,6 @@ function validateNombre(checkDB = true) {
         return false;
     }
     
-    // Verificar en BD si está activada la opción
     if (checkDB) {
         statusDiv.addClass('warning').html('🔍 Verificando disponibilidad...');
         
@@ -103,7 +135,7 @@ function validateNombre(checkDB = true) {
             type: 'GET',
             data: { 
                 nombre: nombre,
-                id: $('#productId').val() || '' // Enviar ID en modo edición
+                id: $('#productId').val() || ''
             },
             success: function(response) {
                 const result = JSON.parse(response);
@@ -128,7 +160,6 @@ function validateNombre(checkDB = true) {
             }
         });
     } else {
-        // Validación básica sin verificar BD
         statusDiv.addClass('success').html('✓ Formato válido');
         input.addClass('is-valid');
         validationState.nombre = true;
@@ -189,7 +220,6 @@ function validateModelo() {
         return false;
     }
     
-    // Validar formato alfanumérico con guiones
     const modeloRegex = /^[a-zA-Z0-9\-]+$/;
     if (!modeloRegex.test(modelo)) {
         statusDiv.addClass('error').html('⚠️ El modelo solo puede contener letras, números y guiones');
@@ -274,7 +304,7 @@ function validateUnidades() {
     
     const unidadesNum = parseInt(unidades);
     
-    if (isNaN(unidadesNum) || !Number.isInteger(unidadesNum)) {
+    if (isNaN(unidadesNum) || !Number.isInteger(parseFloat(unidades))) {
         statusDiv.addClass('error').html('⚠️ Las unidades deben ser un número entero');
         input.addClass('is-invalid');
         validationState.unidades = false;
@@ -348,7 +378,6 @@ function validateImagen() {
 function validateAllFields() {
     let isValid = true;
     
-    // Validar campos obligatorios
     if (!validateNombre(false)) isValid = false;
     if (!validateMarca()) isValid = false;
     if (!validateModelo()) isValid = false;
@@ -361,22 +390,22 @@ function validateAllFields() {
            validationState.modelo && validationState.precio && validationState.unidades;
 }
 
+// ========================================
 // ENVIAR FORMULARIO
+// ========================================
 $('#product-form').on('submit', function(e) {
     e.preventDefault();
     
-    // Mostrar barra de estado global
-    const globalStatus = $('#global-status');
-    globalStatus.removeClass('alert-success alert-danger').addClass('show');
-    
-    // Validar todos los campos
     if (!validateAllFields()) {
-        globalStatus.addClass('alert-danger')
-                   .html('<strong>Error:</strong> Por favor, corrige los campos marcados en rojo antes de continuar.');
+        showNotification(
+            '❌ ERROR DE VALIDACIÓN',
+            'Por favor, corrige los campos marcados en rojo antes de continuar.',
+            'error',
+            4000
+        );
         return false;
     }
     
-    // Verificar disponibilidad del nombre en BD antes de enviar
     const nombre = $('#nombre').val().trim();
     const productId = $('#productId').val();
     
@@ -391,25 +420,27 @@ $('#product-form').on('submit', function(e) {
             const result = JSON.parse(response);
             
             if (result.exists && !editMode) {
-                globalStatus.addClass('alert-danger')
-                           .html('<strong>Error:</strong> Ya existe un producto con ese nombre.');
+                showNotification(
+                    '❌ NOMBRE DUPLICADO',
+                    'Ya existe un producto con ese nombre en la base de datos.',
+                    'error',
+                    4000
+                );
                 $('#status-nombre').removeClass('success').addClass('error')
                                   .html('❌ Este nombre ya existe en la base de datos');
                 $('#nombre').addClass('is-invalid').removeClass('is-valid');
                 return false;
             }
             
-            // Si todo está bien, proceder a guardar
             saveProduct();
         }
     });
 });
 
+// ========================================
 // GUARDAR PRODUCTO
+// ========================================
 function saveProduct() {
-    const globalStatus = $('#global-status');
-    globalStatus.html('<strong>Guardando...</strong> Por favor espera.').addClass('alert-info');
-    
     const productData = {
         nombre: $('#nombre').val().trim(),
         marca: $('#marca').val().trim(),
@@ -422,10 +453,12 @@ function saveProduct() {
     
     const productId = $('#productId').val();
     let url = './backend/product-add.php';
+    let actionType = 'agregado';
     
     if (editMode && productId) {
         productData.id = productId;
         url = './backend/product-edit.php';
+        actionType = 'actualizado';
     }
     
     $.ajax({
@@ -436,35 +469,40 @@ function saveProduct() {
         success: function(response) {
             const result = JSON.parse(response);
             
-            globalStatus.removeClass('alert-info alert-danger');
-            
             if (result.status === 'success') {
-                globalStatus.addClass('alert-success')
-                           .html(`<strong>¡Éxito!</strong> ${result.message}`);
+                // MOSTRAR RECUADRO GRANDE DE ÉXITO
+                showNotification(
+                    `✓ PRODUCTO ${actionType.toUpperCase()} EXITOSAMENTE`,
+                    `El producto "${productData.nombre}" ha sido ${actionType} correctamente en el sistema.`,
+                    'success',
+                    5000
+                );
                 
-                // Limpiar formulario
                 resetForm();
-                
-                // Recargar lista de productos
                 listarProductos();
-                
-                // Ocultar mensaje después de 3 segundos
-                setTimeout(() => {
-                    globalStatus.removeClass('show');
-                }, 3000);
             } else {
-                globalStatus.addClass('alert-danger')
-                           .html(`<strong>Error:</strong> ${result.message}`);
+                showNotification(
+                    '❌ ERROR AL GUARDAR',
+                    result.message,
+                    'error',
+                    4000
+                );
             }
         },
         error: function() {
-            globalStatus.removeClass('alert-info').addClass('alert-danger')
-                       .html('<strong>Error:</strong> No se pudo conectar con el servidor.');
+            showNotification(
+                '❌ ERROR DE CONEXIÓN',
+                'No se pudo conectar con el servidor. Por favor, verifica tu conexión.',
+                'error',
+                4000
+            );
         }
     });
 }
 
+// ========================================
 // LISTAR PRODUCTOS
+// ========================================
 function listarProductos() {
     $.ajax({
         url: './backend/product-list.php',
@@ -474,24 +512,24 @@ function listarProductos() {
             let template = '';
             
             if (productos.length === 0) {
-                template = '<tr><td colspan="8" class="text-center">No hay productos registrados</td></tr>';
+                template = '<tr><td colspan="8" class="text-center py-4"><i class="fas fa-inbox fa-3x text-muted mb-3"></i><br>No hay productos registrados</td></tr>';
             } else {
                 productos.forEach(producto => {
                     template += `
                         <tr>
                             <td>${producto.id}</td>
-                            <td>${producto.nombre}</td>
+                            <td><strong>${producto.nombre}</strong></td>
                             <td>${producto.marca}</td>
                             <td>${producto.modelo}</td>
                             <td>$${parseFloat(producto.precio).toFixed(2)}</td>
-                            <td>${producto.unidades}</td>
+                            <td><span class="badge badge-primary">${producto.unidades}</span></td>
                             <td><small>${producto.detalles.substring(0, 30)}${producto.detalles.length > 30 ? '...' : ''}</small></td>
                             <td>
-                                <button class="btn btn-warning btn-sm btn-edit" data-id="${producto.id}">
-                                    Editar
+                                <button class="btn btn-warning btn-sm btn-edit" data-id="${producto.id}" title="Editar producto">
+                                    <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-danger btn-sm btn-delete" data-id="${producto.id}">
-                                    Eliminar
+                                <button class="btn btn-danger btn-sm btn-delete" data-id="${producto.id}" title="Eliminar producto">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -504,7 +542,9 @@ function listarProductos() {
     });
 }
 
+// ========================================
 // BUSCAR PRODUCTOS
+// ========================================
 $('#search-form').on('submit', function(e) {
     e.preventDefault();
     const search = $('#search').val().trim();
@@ -525,22 +565,19 @@ $('#search-form').on('submit', function(e) {
             if (productos.length > 0) {
                 let searchList = '';
                 productos.forEach(p => {
-                    searchList += `<li>${p.nombre} - ${p.marca} (${p.modelo})</li>`;
+                    searchList += `<li><i class="fas fa-check text-success"></i> ${p.nombre} - ${p.marca} (${p.modelo})</li>`;
                 });
                 $('#search-container').html(searchList);
                 $('#search-results').removeClass('d-none');
-                
-                // Actualizar tabla con resultados
                 listarProductosEnTabla(productos);
             } else {
-                $('#search-container').html('<li>No se encontraron resultados</li>');
+                $('#search-container').html('<li><i class="fas fa-times text-danger"></i> No se encontraron resultados</li>');
                 $('#search-results').removeClass('d-none');
             }
         }
     });
 });
 
-// Búsqueda en tiempo real
 $('#search').on('input', function() {
     if ($(this).val() === '') {
         $('#search-results').addClass('d-none');
@@ -548,7 +585,6 @@ $('#search').on('input', function() {
     }
 });
 
-// MOSTRAR PRODUCTOS EN TABLA (USADO EN BÚSQUEDA)
 function listarProductosEnTabla(productos) {
     let template = '';
     
@@ -556,18 +592,18 @@ function listarProductosEnTabla(productos) {
         template += `
             <tr>
                 <td>${producto.id}</td>
-                <td>${producto.nombre}</td>
+                <td><strong>${producto.nombre}</strong></td>
                 <td>${producto.marca}</td>
                 <td>${producto.modelo}</td>
                 <td>$${parseFloat(producto.precio).toFixed(2)}</td>
-                <td>${producto.unidades}</td>
+                <td><span class="badge badge-primary">${producto.unidades}</span></td>
                 <td><small>${producto.detalles.substring(0, 30)}${producto.detalles.length > 30 ? '...' : ''}</small></td>
                 <td>
                     <button class="btn btn-warning btn-sm btn-edit" data-id="${producto.id}">
-                        Editar
+                        <i class="fas fa-edit"></i>
                     </button>
                     <button class="btn btn-danger btn-sm btn-delete" data-id="${producto.id}">
-                        Eliminar
+                        <i class="fas fa-trash"></i>
                     </button>
                 </td>
             </tr>
@@ -577,7 +613,9 @@ function listarProductosEnTabla(productos) {
     $('#products-table').html(template);
 }
 
+// ========================================
 // EDITAR PRODUCTO
+// ========================================
 $(document).on('click', '.btn-edit', function() {
     const id = $(this).data('id');
     
@@ -588,7 +626,6 @@ $(document).on('click', '.btn-edit', function() {
         success: function(response) {
             const producto = JSON.parse(response);
             
-            // Cargar datos en formulario
             $('#nombre').val(producto.nombre);
             $('#marca').val(producto.marca);
             $('#modelo').val(producto.modelo);
@@ -598,12 +635,17 @@ $(document).on('click', '.btn-edit', function() {
             $('#imagen').val(producto.imagen);
             $('#productId').val(producto.id);
             
-            // Cambiar a modo edición
             editMode = true;
-            $('#btn-text').text('Actualizar Producto');
+            $('#btn-text').html('<i class="fas fa-save"></i> Actualizar Producto');
             $('#btn-cancel').show();
             
-            // Scroll al formulario
+            showNotification(
+                'ℹ️ MODO EDICIÓN ACTIVADO',
+                `Editando el producto: ${producto.nombre}`,
+                'info',
+                3000
+            );
+            
             $('html, body').animate({
                 scrollTop: $('#product-form').offset().top - 100
             }, 500);
@@ -611,18 +653,30 @@ $(document).on('click', '.btn-edit', function() {
     });
 });
 
+// ========================================
 // CANCELAR EDICIÓN
+// ========================================
 $('#btn-cancel').on('click', function() {
     resetForm();
+    showNotification(
+        'ℹ️ EDICIÓN CANCELADA',
+        'Se ha cancelado la edición del producto.',
+        'info',
+        2000
+    );
 });
 
+// ========================================
 // ELIMINAR PRODUCTO
+// ========================================
 $(document).on('click', '.btn-delete', function() {
-    if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+    const id = $(this).data('id');
+    const row = $(this).closest('tr');
+    const productName = row.find('td:eq(1)').text();
+    
+    if (!confirm(`¿Estás seguro de que deseas eliminar el producto "${productName}"?`)) {
         return;
     }
-    
-    const id = $(this).data('id');
     
     $.ajax({
         url: './backend/product-delete.php',
@@ -630,36 +684,48 @@ $(document).on('click', '.btn-delete', function() {
         data: { id: id },
         success: function(response) {
             const result = JSON.parse(response);
-            const globalStatus = $('#global-status');
             
             if (result.status === 'success') {
-                globalStatus.removeClass('alert-danger').addClass('alert-success show')
-                           .html(`<strong>¡Éxito!</strong> ${result.message}`);
+                // MOSTRAR RECUADRO GRANDE DE ELIMINACIÓN EXITOSA
+                showNotification(
+                    '✓ PRODUCTO ELIMINADO EXITOSAMENTE',
+                    `El producto "${productName}" ha sido eliminado correctamente del sistema.`,
+                    'success',
+                    5000
+                );
                 
                 listarProductos();
-                
-                setTimeout(() => {
-                    globalStatus.removeClass('show');
-                }, 3000);
             } else {
-                globalStatus.removeClass('alert-success').addClass('alert-danger show')
-                           .html(`<strong>Error:</strong> ${result.message}`);
+                showNotification(
+                    '❌ ERROR AL ELIMINAR',
+                    result.message,
+                    'error',
+                    4000
+                );
             }
+        },
+        error: function() {
+            showNotification(
+                '❌ ERROR DE CONEXIÓN',
+                'No se pudo conectar con el servidor.',
+                'error',
+                4000
+            );
         }
     });
 });
 
+// ========================================
 // RESETEAR FORMULARIO
+// ========================================
 function resetForm() {
     $('#product-form')[0].reset();
     $('#productId').val('');
     $('#imagen').val('img/default.png');
     
-    // Limpiar estados de validación
     $('.form-control').removeClass('is-valid is-invalid');
     $('.status-bar').removeClass('success error warning').html('');
     
-    // Resetear estado de validación
     validationState = {
         nombre: false,
         marca: false,
@@ -670,8 +736,7 @@ function resetForm() {
         imagen: true
     };
     
-    // Volver a modo agregar
     editMode = false;
-    $('#btn-text').text('Agregar Producto');
+    $('#btn-text').html('<i class="fas fa-plus-circle"></i> Agregar Producto');
     $('#btn-cancel').hide();
 }
