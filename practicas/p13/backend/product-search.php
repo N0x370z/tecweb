@@ -1,13 +1,13 @@
 <?php
-use TECWEB\MYAPI\Products;
-require_once __DIR__ . '/myapi/Products.php';
+require_once __DIR__.'/../vendor/autoload.php';
+use TECWEB\MYAPI\Read\Read;
 
-$productos = new Products('marketzone');
+$producto = new Read('marketzone');
 
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
-    $productos->search($search);
+    $producto->search($search);
 }
 
-echo $productos->getData();
+echo $producto->getData();
 ?>

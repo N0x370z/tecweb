@@ -1,119 +1,55 @@
 <?php
-namespace TECWEB\MYAPI\Read;
+namespace TECWEB\MYAPI\Update;
 
 use TECWEB\MYAPI\DataBase;
 require_once __DIR__ . '/../DataBase.php';
 
-class Read extends DataBase {
+class Update extends DataBase {
     private $response;
-
+    
     public function __construct($db = 'marketzone', $user = 'root', $pass = 'JoshelinLun407') {
         $this->response = array();
         parent::__construct($db, $user, $pass);
     }
 
     /**
-     * Lista todos los productos no eliminados
+     * Edita/actualiza un producto existente
+     * @param object $jsonOBJ - Objeto con los datos del producto a actualizar
      */
-    public function list() {
-        // SE REALIZA LA QUERY DE BÚSQUEDA
-        if ($result = $this->conexion->query("SELECT * FROM productos WHERE eliminado = 0")) {
-            // SE OBTIENEN LOS RESULTADOS
-            $rows = $result->fetch_all(MYSQLI_ASSOC);
-
-            if (!is_null($rows)) {
-                // SE CODIFICAN A UTF-8 LOS DATOS Y SE MAPEAN AL ARREGLO DE RESPUESTA
-                foreach ($rows as $num => $row) {
-                    foreach ($row as $key => $value) {
-                        $this->response[$num][$key] = utf8_encode($value);
-                    }
-                }
-            }
-            $result->free();
-        } else {
-            die('Query Error: ' . mysqli_error($this->conexion));
-        }
-    }
-
-    /**
-     * Busca productos por ID, nombre, marca o detalles
-     * @param string $search - Término de búsqueda
-     */
-    public function search($search) {
-        // SE REALIZA LA QUERY DE BÚSQUEDA
-        $sql = "SELECT * FROM productos WHERE (id = '{$search}' OR nombre LIKE '%{$search}%' OR marca LIKE '%{$search}%' OR detalles LIKE '%{$search}%') AND eliminado = 0";
+    public function edit($jsonOBJ) {
+        // SE INICIALIZA LA RESPUESTA
+        $this->response = array(
+            'status'  => 'error',
+            'message' => 'Error al actualizar el producto'
+        );
         
-        if ($result = $this->conexion->query($sql)) {
-            // SE OBTIENEN LOS RESULTADOS
-            $rows = $result->fetch_all(MYSQLI_ASSOC);
-
-            if (!is_null($rows)) {
-                // SE CODIFICAN A UTF-8 LOS DATOS Y SE MAPEAN AL ARREGLO DE RESPUESTA
-                foreach ($rows as $num => $row) {
-                    foreach ($row as $key => $value) {
-                        $this->response[$num][$key] = utf8_encode($value);
-                    }
-                }
-            }
-            $result->free();
-        } else {
-            die('Query Error: ' . mysqli_error($this->conexion));
-        }
-    }
-
-    /**
-     * Obtiene un producto específico por ID
-     * @param int $id - ID del producto
-     */
-    public function single($id) {
-        // SE REALIZA LA QUERY DE BÚSQUEDA
-        $sql = "SELECT * FROM productos WHERE id = {$id}";
+        // VERIFICAR SI YA EXISTE OTRO PRODUCTO CON EL MISMO NOMBRE
+        $sql = "SELECT * FROM productos WHERE nombre = '{$jsonOBJ->nombre}' AND id != {$jsonOBJ->id} AND eliminado = 0";
+        $result = $this->conexion->query($sql);
         
-        if ($result = $this->conexion->query($sql)) {
-            // SE OBTIENE EL RESULTADO
-            $row = $result->fetch_assoc();
+        if ($result->num_rows == 0) {
+            $this->conexion->set_charset("utf8");
+            $sql = "UPDATE productos SET 
+                    nombre = '{$jsonOBJ->nombre}',
+                    marca = '{$jsonOBJ->marca}',
+                    modelo = '{$jsonOBJ->modelo}',
+                    precio = {$jsonOBJ->precio},
+                    detalles = '{$jsonOBJ->detalles}',
+                    unidades = {$jsonOBJ->unidades},
+                    imagen = '{$jsonOBJ->imagen}'
+                    WHERE id = {$jsonOBJ->id}";
             
-            if (!is_null($row)) {
-                // SE CODIFICAN A UTF-8 LOS DATOS
-                foreach ($row as $key => $value) {
-                    $this->response[$key] = utf8_encode($value);
-                }
+            if ($this->conexion->query($sql)) {
+                $this->response['status'] = "success";
+                $this->response['message'] = "Producto actualizado correctamente";
+            } else {
+                $this->response['message'] = "ERROR: No se ejecutó $sql. " . mysqli_error($this->conexion);
             }
-            $result->free();
         } else {
-            die('Query Error: ' . mysqli_error($this->conexion));
-        }
-    }
-
-    /**
-     * Verifica si existe un producto con el nombre dado
-     * @param string $name - Nombre a verificar
-     * @param int $id - ID del producto actual (para excluirlo en modo edición)
-     */
-    public function singleByName($name, $id = null) {
-        // ESCAPAR CARACTERES ESPECIALES
-        $name = $this->conexion->real_escape_string($name);
-        
-        // SE REALIZA LA QUERY DE BÚSQUEDA
-        if (!empty($id)) {
-            $sql = "SELECT id FROM productos WHERE nombre = '{$name}' AND id != {$id} AND eliminado = 0";
-        } else {
-            $sql = "SELECT id FROM productos WHERE nombre = '{$name}' AND eliminado = 0";
+            $this->response['message'] = "Ya existe un producto con ese nombre";
         }
         
-        if ($result = $this->conexion->query($sql)) {
-            // SI ENCUENTRA AL MENOS UN REGISTRO
-            $this->response = array(
-                'exists' => $result->num_rows > 0,
-                'message' => $result->num_rows > 0 ? 'El nombre ya está registrado' : 'Nombre disponible'
-            );
-            $result->free();
-        } else {
-            $this->response = array(
-                'exists' => false,
-                'message' => 'Error al verificar el nombre'
-            );
-        }
+        $result->free();
     }
 
     /**

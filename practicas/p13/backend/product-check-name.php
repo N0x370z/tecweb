@@ -1,14 +1,14 @@
 <?php
-use TECWEB\MYAPI\Products;
-require_once __DIR__ . '/myapi/Products.php';
+require_once __DIR__.'/../vendor/autoload.php';
+use TECWEB\MYAPI\Read\Read;
 
-$productos = new Products('marketzone');
+$producto = new Read('marketzone');
 
 if (isset($_GET['nombre'])) {
     $nombre = $_GET['nombre'];
     $id = isset($_GET['id']) ? $_GET['id'] : null;
-    $productos->singleByName($nombre, $id);
+    $producto->singleByName($nombre, $id);
 }
 
-echo $productos->getData();
+echo $producto->getData();
 ?>

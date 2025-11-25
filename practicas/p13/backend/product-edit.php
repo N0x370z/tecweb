@@ -1,16 +1,16 @@
 <?php
-use TECWEB\MYAPI\Products;
-require_once __DIR__ . '/myapi/Products.php';
+require_once __DIR__.'/../vendor/autoload.php';
+use TECWEB\MYAPI\Update\Update;
 
-$productos = new Products('marketzone');
-$producto = file_get_contents('php://input');
+$producto = new Update('marketzone');
+$productoData = file_get_contents('php://input');
 
-if (!empty($producto)) {
-    $jsonOBJ = json_decode($producto);
+if (!empty($productoData)) {
+    $jsonOBJ = json_decode($productoData);
     if (isset($jsonOBJ->id)) {
-        $productos->edit($jsonOBJ);
+        $producto->edit($jsonOBJ);
     }
 }
 
-echo $productos->getData();
+echo $producto->getData();
 ?>
