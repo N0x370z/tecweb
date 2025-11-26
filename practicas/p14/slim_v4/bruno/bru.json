@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "name": "Slim Framework v4 API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
+

@@ -11,14 +11,22 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 // Crear la aplicación Slim
 $app = AppFactory::create();
 
-// IMPORTANTE: Ajustar según tu estructura de carpetas
-// Ejemplo: si tu proyecto está en localhost/tecweb/practicas/p14/slim_v4
-$app->setBasePath("/tecweb/practicas/p14/slim_v4");
+// Configurar basePath automáticamente
+// Para servidor integrado de PHP (php -S localhost:8000): deja vacío ""
+// Para XAMPP/Apache: se detecta automáticamente desde SCRIPT_NAME
+$basePath = '';
+if (isset($_SERVER['SCRIPT_NAME'])) {
+    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+    if ($scriptDir !== '/' && $scriptDir !== '\\') {
+        $basePath = $scriptDir;
+    }
+}
+$app->setBasePath($basePath);
 
 // Habilitar el manejo de errores
 $app->addErrorMiddleware(true, true, true);
@@ -27,7 +35,7 @@ $app->addErrorMiddleware(true, true, true);
  * RUTA 1: GET /
  * Método HTTP: GET
  * Descripción: Ruta raíz que retorna un mensaje de bienvenida
- * URL de prueba: http://localhost/tecweb/practicas/p14/slim_v4/
+ * URL de prueba: http://localhost:8000/
  */
 $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("¡Hola Mundo desde Slim Framework v4!");
@@ -39,7 +47,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
  * Método HTTP: GET
  * Descripción: Recibe un parámetro en la URL y retorna un saludo personalizado
  * Parámetros de ruta: {nombre} - El nombre de la persona a saludar
- * URL de prueba: http://localhost/tecweb/practicas/p14/slim_v4/hola/Juan
+ * URL de prueba: http://localhost:8000/hola/Juan
  */
 $app->get('/hola/{nombre}', function (Request $request, Response $response, $args) {
     $nombre = $args['nombre'];
@@ -52,7 +60,7 @@ $app->get('/hola/{nombre}', function (Request $request, Response $response, $arg
  * Método HTTP: POST
  * Descripción: Recibe datos mediante POST y los procesa
  * Parámetros POST esperados: nombre, edad (enviados desde formulario o POSTMAN)
- * URL de prueba: http://localhost/tecweb/practicas/p14/slim_v4/pruebapost
+ * URL de prueba: http://localhost:8000/pruebapost
  */
 $app->post('/pruebapost', function (Request $request, Response $response, $args) {
     // Obtener datos del POST
@@ -74,7 +82,7 @@ $app->post('/pruebapost', function (Request $request, Response $response, $args)
  * Método HTTP: POST
  * Descripción: Recibe datos por POST y retorna una respuesta en formato JSON
  * Parámetros POST esperados: nombre, edad, correo
- * URL de prueba: http://localhost/tecweb/practicas/p14/slim_v4/testjson
+ * URL de prueba: http://localhost:8000/testjson
  */
 $app->post('/testjson', function (Request $request, Response $response, $args) {
     // Obtener datos del POST

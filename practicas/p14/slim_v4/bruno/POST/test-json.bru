@@ -1,0 +1,37 @@
+meta {
+  name: Test JSON
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/testjson
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nombre": "Carlos",
+    "edad": 30,
+    "correo": "carlos@example.com"
+  }
+}
+
+docs {
+  # Test JSON
+  
+  Recibe datos por POST y retorna una respuesta en formato JSON.
+  
+  **URL:** `POST /testjson`
+  
+  **Parámetros POST (JSON):**
+  - `nombre`: Nombre de la persona
+  - `edad`: Edad de la persona
+  - `correo`: Correo electrónico
+  
+  **Formato:** `application/json`
+  
+  **Respuesta:** JSON con los datos procesados y timestamp
+}
+

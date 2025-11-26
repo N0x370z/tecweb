@@ -1,0 +1,31 @@
+meta {
+  name: Prueba POST
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/pruebapost
+  body: form-urlencoded
+  auth: none
+}
+
+body:form-urlencoded {
+  nombre: María
+  edad: 25
+}
+
+docs {
+  # Prueba POST
+  
+  Recibe datos mediante POST y los procesa.
+  
+  **URL:** `POST /pruebapost`
+  
+  **Parámetros POST:**
+  - `nombre`: Nombre de la persona
+  - `edad`: Edad de la persona
+  
+  **Formato:** `application/x-www-form-urlencoded`
+}
+
