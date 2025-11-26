@@ -1,0 +1,13 @@
+{
+    "name": "atreus/practicas",
+    "authors": [
+        {
+            "name": "Ivan Luna",
+            "email": "crash2514@outlook.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.14.0",
+        "slim/psr7": "^1.8"
+    }
+}
