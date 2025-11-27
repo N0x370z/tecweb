@@ -10,20 +10,20 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7Server\ServerRequestCreator;
-
 require __DIR__ . '/vendor/autoload.php';
 
-// Crear la aplicación Slim con Nyholm PSR-7
-$psr17Factory = new Psr17Factory();
-AppFactory::setResponseFactory($psr17Factory);
-
+// Crear la aplicación Slim
 $app = AppFactory::create();
 
-// IMPORTANTE: Para servidor integrado de PHP en Mac, comenta esta línea
-// Si usas MAMP o Apache, descomenta y ajusta según tu configuración
-// $app->setBasePath("");
+// Configurar automáticamente el basePath según el servidor
+$basePath = '';
+if (isset($_SERVER['SCRIPT_NAME'])) {
+    $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    if ($scriptDir !== '' && $scriptDir !== '/') {
+        $basePath = $scriptDir;
+    }
+}
+$app->setBasePath($basePath);
 
 // Habilitar el manejo de errores
 $app->addErrorMiddleware(true, true, true);

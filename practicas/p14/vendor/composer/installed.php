@@ -3,7 +3,7 @@
         'name' => 'atreus/practicas',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a5fb5b77019005de69d675268320f71819700466',
+        'reference' => 'dbeb79cdd4adfc1364be60d2e6526363c0131041',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'atreus/practicas' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a5fb5b77019005de69d675268320f71819700466',
+            'reference' => 'dbeb79cdd4adfc1364be60d2e6526363c0131041',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
