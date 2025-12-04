@@ -1,0 +1,25 @@
+meta {
+  name: Saludo Personalizado
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/hola/Juan
+  body: none
+  auth: none
+}
+
+docs {
+  # Saludo Personalizado
+  
+  Recibe un parámetro en la URL y retorna un saludo personalizado.
+  
+  **URL:** `GET /hola/{nombre}`
+  
+  **Parámetros:**
+  - `nombre`: El nombre de la persona a saludar (en la URL)
+  
+  **Ejemplo:** Cambia `Juan` en la URL por cualquier otro nombre.
+}
+
